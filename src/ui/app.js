@@ -1,15 +1,21 @@
 import { problems, groupByTopic, stars } from "../problems/index.js";
 import { getRunner, listRunners } from "../runners/index.js";
 import { createEditor } from './editor.js';
+import { translateError } from "../utils/errorTranslator.js";
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 const show = (v) => JSON.stringify(v);
 const HINT = '<span class="dim">按「執行」看輸出,按「提交」檢查答案。</span>';
 
+function formatError(lang, message) {
+    const { zh, raw } = translateError(lang, message);
+    if(!zh) return `<span class="bad>❌ ${esc(zh)}</span>\n<span class="dim>原文:${esc(raw)}</span>`;
+}
+
 export function mountApp(root) {
   root.innerHTML = `
     <header>
-      <h1>💻 程式練習平台</h1>
+      <h1>程式練習平台</h1>
       <select id="select-problem"></select>
       <select id="select-lang"></select>
       <button class="run" id="btn-run">▶ 執行</button>
@@ -54,7 +60,7 @@ export function mountApp(root) {
 function load() {
   const p = problems[curProblem];
   const lang = p.languages[curLang];
-  $("problem").innerHTML = '<h2>${p.title}</h2><p class="dim">難度 ${stars(p.difficulty)}</p>${p.desc}';
+  $("problem").innerHTML = `<h2>${p.title}</h2><p class="dim">難度 ${stars(p.difficulty)}</p>${p.desc}`;
   if (!lang) {
     editor.setValue("");
     editor.setReadOnly(true);
@@ -84,7 +90,7 @@ function load() {
     const r = await runner.run(editor.getValue());
     let html = "";
     if (r.logs?.length) html += esc(r.logs.join("\n")) + "\n";
-    if (r.error) html += `<span class="bad">錯誤:${esc(r.error)}</span>`;
+    if (r.error) html += formatError(curLang, r.error);
     else if (!r.logs?.length) {
       const fnName = curLang === "python" ? "print()" : "console.log()";
       html += `<span class="dim">(沒有輸出,可以用 ${fnName} 印出內容)</span>`;
@@ -98,7 +104,7 @@ function load() {
     const runner = getRunner(curLang);
     if (!runner.ready) await runner.init();
     const r = await runner.judge(editor.getValue(), p.tests, p.languages[curLang]);
-    if (r.error) { out.innerHTML = `<span class="bad">錯誤:${esc(r.error)}</span>`; return; }
+    if (r.error) { out.innerHTML = formatError(curLang, r.error); return; }
     let passed = 0, html = "";
     r.results.forEach((t, i) => {
       if (t.pass) passed++;
