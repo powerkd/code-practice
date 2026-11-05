@@ -1,0 +1,19 @@
+{
+  "id": "data-003",
+  "topic": "data",
+  "difficulty": 2,
+  "title": "計算出現次數",
+  "desc": "<p>完成函式,回傳字元 <code>ch</code> 在字串 <code>s</code> 中出現的次數。</p><pre>count(\"banana\", \"a\") → 3</pre>",
+  "languages": {
+    "javascript": {
+      "fn": "count",
+      "starter": "function count(s, ch) {\n  \n}\n"
+    }
+  },
+  "tests": [
+    { "args": ["banana", "a"], "expected": 3 },
+    { "args": ["hello", "z"], "expected": 0 },
+    { "args": ["", "a"], "expected": 0 },
+    { "args": ["aaaa", "a"], "expected": 4 }
+  ]
+}

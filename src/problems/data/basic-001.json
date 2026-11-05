@@ -1,0 +1,19 @@
+{
+  "id": "basic-001",
+  "topic": "basic",
+  "difficulty": 1,
+  "title": "兩數相加",
+  "desc": "<p>請完成函式,回傳 a 與 b 的總和。</p><pre>add(1, 2) → 3</pre>",
+  "languages": {
+    "javascript": {
+      "fn": "add",
+      "starter": "function add(a, b) {\n  // 在這裡寫你的程式\n  \n}\n"
+    }
+  },
+  "tests": [
+    { "args": [1, 2], "expected": 3 },
+    { "args": [-5, 5], "expected": 0 },
+    { "args": [100, 250], "expected": 350 },
+    { "args": [0, 0], "expected": 0 }
+  ]
+}

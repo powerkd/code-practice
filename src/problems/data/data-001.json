@@ -1,0 +1,18 @@
+{
+  "id": "data-001",
+  "topic": "data",
+  "difficulty": 1,
+  "title": "反轉字串",
+  "desc": "<p>完成函式,回傳反轉後的字串。</p><pre>reverse(\"abc\") → \"cba\"</pre>",
+  "languages": {
+    "javascript": {
+      "fn": "reverse",
+      "starter": "function reverse(s) {\n  \n}\n"
+    }
+  },
+  "tests": [
+    { "args": ["abc"], "expected": "cba" },
+    { "args": [""], "expected": "" },
+    { "args": ["hello"], "expected": "olleh" }
+  ]
+}

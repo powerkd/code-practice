@@ -1,7 +1,6 @@
-import { createEditor } from './editor.js';
-import { problems } from "../problems/problems.js";
+import { problems, groupByTopic, stars } from "../problems/index.js";
 import { getRunner, listRunners } from "../runners/index.js";
-
+import { createEditor } from './editor.js';
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 const show = (v) => JSON.stringify(v);
@@ -16,6 +15,7 @@ export function mountApp(root) {
       <button class="run" id="btn-run">▶ 執行</button>
       <button class="submit" id="btn-submit">✔ 提交</button>
       <button class="reset" id="btn-reset">重置</button>
+      <button class="reset" id="btn-next">下一題 ➜</button>
     </header>
     <main>
       <div id="problem"></div>
@@ -38,7 +38,15 @@ export function mountApp(root) {
   });
 
   listRunners().forEach((r) => selLang.add(new Option(r.name, r.id)));
-  problems.forEach((p, i) => selProblem.add(new Option(p.title, i)));
+  groupByTopic().forEach((g) => {
+    const group = document.createElement("optgroup");
+    group.label = g.name;
+    g.items.forEach((p) => {
+      group.appendChild(new Option(`${p.title}  ${stars(p.difficulty)}`, problems.indexOf(p)));
+    });
+    selProblem.appendChild(group);
+  });
+
 
   selProblem.onchange = () => { curProblem = +selProblem.value; load(); };
   selLang.onchange = () => { curLang = selLang.value; load(); };
@@ -46,7 +54,7 @@ export function mountApp(root) {
 function load() {
   const p = problems[curProblem];
   const lang = p.languages[curLang];
-  $("problem").innerHTML = `<h2>${p.title}</h2>${p.desc}`;
+  $("problem").innerHTML = '<h2>${p.title}</h2><p class="dim">難度 ${stars(p.difficulty)}</p>${p.desc}';
   if (!lang) {
     editor.setValue("");
     editor.setReadOnly(true);
@@ -60,6 +68,11 @@ function load() {
 }
 
   $("btn-reset").onclick = () => { localStorage.removeItem(storageKey()); load(); };
+  $("btn-next").onclick = () => {
+  curProblem = (curProblem + 1) % problems.length;
+  selProblem.value = curProblem;
+  load();
+};
 
   $("btn-run").onclick = async () => {
     out.innerHTML = '<span class="dim">執行中…</span>';

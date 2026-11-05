@@ -1,0 +1,19 @@
+{
+  "id": "algo-002",
+  "topic": "algo",
+  "difficulty": 2,
+  "title": "線性搜尋",
+  "desc": "<p>完成函式,回傳 <code>target</code> 在陣列中第一次出現的索引,找不到回傳 <code>-1</code>。</p><pre>indexOf2([4, 8, 6], 6) → 2</pre>",
+  "languages": {
+    "javascript": {
+      "fn": "indexOf2",
+      "starter": "function indexOf2(arr, target) {\n  // 不要直接用內建的 indexOf\n  \n}\n"
+    }
+  },
+  "tests": [
+    { "args": [[4, 8, 6], 6], "expected": 2 },
+    { "args": [[1, 2, 3], 9], "expected": -1 },
+    { "args": [[], 1], "expected": -1 },
+    { "args": [[5, 5, 5], 5], "expected": 0 }
+  ]
+}

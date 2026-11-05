@@ -1,0 +1,18 @@
+{
+  "id": "data-002",
+  "topic": "data",
+  "difficulty": 1,
+  "title": "陣列最大值",
+  "desc": "<p>完成函式,回傳陣列中的最大值。</p>",
+  "languages": {
+    "javascript": {
+      "fn": "maxOf",
+      "starter": "function maxOf(arr) {\n  \n}\n"
+    }
+  },
+  "tests": [
+    { "args": [[1, 5, 3]], "expected": 5 },
+    { "args": [[-2, -9, -1]], "expected": -1 },
+    { "args": [[7]], "expected": 7 }
+  ]
+}

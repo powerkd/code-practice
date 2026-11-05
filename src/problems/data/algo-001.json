@@ -1,0 +1,19 @@
+{
+  "id": "algo-001",
+  "topic": "algo",
+  "difficulty": 2,
+  "title": "階乘(遞迴)",
+  "desc": "<p>完成函式,回傳 n! 。請試著用<b>遞迴</b>完成。</p><pre>factorial(5) → 120</pre><p>提示:<code>0! = 1</code></p>",
+  "languages": {
+    "javascript": {
+      "fn": "factorial",
+      "starter": "function factorial(n) {\n  // 終止條件是什麼?\n  \n}\n"
+    }
+  },
+  "tests": [
+    { "args": [0], "expected": 1 },
+    { "args": [1], "expected": 1 },
+    { "args": [5], "expected": 120 },
+    { "args": [7], "expected": 5040 }
+  ]
+}

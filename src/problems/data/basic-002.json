@@ -1,0 +1,19 @@
+{
+  "id": "basic-002",
+  "topic": "basic",
+  "difficulty": 1,
+  "title": "判斷偶數",
+  "desc": "<p>完成函式,偶數回傳 <code>true</code>,否則 <code>false</code>。</p>",
+  "languages": {
+    "javascript": {
+      "fn": "isEven",
+      "starter": "function isEven(n) {\n  \n}\n"
+    }
+  },
+  "tests": [
+    { "args": [2], "expected": true },
+    { "args": [7], "expected": false },
+    { "args": [0], "expected": true },
+    { "args": [-3], "expected": false }
+  ]
+}
