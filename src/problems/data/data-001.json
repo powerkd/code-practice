@@ -8,6 +8,10 @@
     "javascript": {
       "fn": "reverse",
       "starter": "function reverse(s) {\n  \n}\n"
+    },
+    "python": {
+      "fn": "reverse",
+      "starter": "def reverse(s):\n    pass\n"
     }
   },
   "tests": [

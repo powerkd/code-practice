@@ -8,7 +8,12 @@
     "javascript": {
       "fn": "isEven",
       "starter": "function isEven(n) {\n  \n}\n"
+    },
+    "python": {
+      "fn": "is_even",
+      "starter": "def is_even(n):\n    pass\n"
     }
+
   },
   "tests": [
     { "args": [2], "expected": true },

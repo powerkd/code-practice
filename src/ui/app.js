@@ -77,12 +77,18 @@ function load() {
   $("btn-run").onclick = async () => {
     out.innerHTML = '<span class="dim">執行中…</span>';
     const runner = getRunner(curLang);
-    if (!runner.ready) await runner.init();
+    if (!runner.ready) {
+      out.innerHTML = '<span class="dim">首次載入 ' + runner.name + ' 執行環境,請稍候(約 10 秒)…</span>';
+      await runner.init();
+    }
     const r = await runner.run(editor.getValue());
     let html = "";
     if (r.logs?.length) html += esc(r.logs.join("\n")) + "\n";
     if (r.error) html += `<span class="bad">錯誤:${esc(r.error)}</span>`;
-    else if (!r.logs?.length) html += '<span class="dim">(沒有輸出,可以用 console.log() 印出內容)</span>';
+    else if (!r.logs?.length) {
+      const fnName = curLang === "python" ? "print()" : "console.log()";
+      html += `<span class="dim">(沒有輸出,可以用 ${fnName} 印出內容)</span>`;
+    }
     out.innerHTML = html;
   };
 

@@ -8,6 +8,10 @@
     "javascript": {
       "fn": "indexOf2",
       "starter": "function indexOf2(arr, target) {\n  // 不要直接用內建的 indexOf\n  \n}\n"
+    },
+    "python": {
+      "fn": "index_of",
+      "starter": "def index_of(arr, target):\n    # 不要直接用內建的 index\n    pass\n"
     }
   },
   "tests": [

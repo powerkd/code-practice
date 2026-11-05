@@ -8,6 +8,10 @@
     "javascript": {
       "fn": "add",
       "starter": "function add(a, b) {\n  // 在這裡寫你的程式\n  \n}\n"
+      },
+    "python": {
+      "fn": "add",
+      "starter": "def add(a, b):\n    # 在這裡寫你的程式\n    pass\n"
     }
   },
   "tests": [

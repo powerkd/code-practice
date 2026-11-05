@@ -8,6 +8,10 @@
     "javascript": {
       "fn": "count",
       "starter": "function count(s, ch) {\n  \n}\n"
+    },
+    "python": {
+      "fn": "count",
+      "starter": "def count(s, ch):\n    pass\n"
     }
   },
   "tests": [

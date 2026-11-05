@@ -8,6 +8,10 @@
     "javascript": {
       "fn": "factorial",
       "starter": "function factorial(n) {\n  // 終止條件是什麼?\n  \n}\n"
+    },
+    "python": {
+      "fn": "factorial",
+      "starter": "def factorial(n):\n    # 終止條件是什麼?\n    pass\n"
     }
   },
   "tests": [

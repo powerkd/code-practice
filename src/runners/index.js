@@ -1,8 +1,9 @@
 import { JsRunner } from "./JsRunner.js";
+import { PythonRunner } from "./PythonRunner.js";
 
 const runners = {
   javascript: new JsRunner(),
-  // Step 6 會加入 python
+  python: new PythonRunner(),
 };
 
 export function getRunner(id) {

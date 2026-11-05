@@ -8,6 +8,10 @@
     "javascript": {
       "fn": "maxOf",
       "starter": "function maxOf(arr) {\n  \n}\n"
+    },
+    "python": {
+      "fn": "max_of",
+      "starter": "def max_of(arr):\n    # 不要直接用內建的 max\n    pass\n"
     }
   },
   "tests": [

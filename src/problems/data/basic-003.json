@@ -8,7 +8,12 @@
     "javascript": {
       "fn": "sumTo",
       "starter": "function sumTo(n) {\n  // 試著用 for 迴圈\n  \n}\n"
+    },
+    "python": {
+      "fn": "sum_to",
+      "starter": "def sum_to(n):\n    # 試著用 for 迴圈\n   pass\n"
     }
+
   },
   "tests": [
     { "args": [1], "expected": 1 },
