@@ -14,7 +14,7 @@ main { flex: 1; display: flex; min-height: 0; }
 #problem code, #problem pre { background: #313244; border-radius: 4px; padding: 2px 6px; }
 #problem pre { padding: 10px; }
 #right { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-#editor { flex: 1; background: #11111b; color: #cdd6f4; border: none; padding: 14px; font-family: Consolas, monospace; font-size: 15px; resize: none; outline: none; tab-size: 2; }
+#editor { flex: 1; min-height: 0;}
 #output { height: 35%; overflow: auto; background: #181825; padding: 12px; font-family: Consolas, monospace; font-size: 14px; border-top: 1px solid #313244; white-space: pre-wrap; }
 .ok { color: #a6e3a1; } .bad { color: #f38ba8; } .dim { color: #7f849c; }
 @media (max-width: 700px) {
