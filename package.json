@@ -10,7 +10,8 @@
   },
   "devDependencies": {
     "vite": "^8.3.6",
-    "vite-plugin-monaco-editor-esm": "^2.0.3"
+    "vite-plugin-monaco-editor-esm": "^2.0.3",
+    "vite-plugin-pwa": "^2.0.0"
   },
   "dependencies": {
     "monaco-editor": "^0.52.2"

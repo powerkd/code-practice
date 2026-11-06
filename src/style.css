@@ -23,4 +23,36 @@ main { flex: 1; display: flex; min-height: 0; }
 .progress { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #a6adc8; }
 .bar { width: 120px; height: 8px; background: #313244; border-radius: 4px; overflow: hidden; }
 .bar > div { height: 100%; background: #a6e3a1; width: 0; transition: width 0.3s; }
+.viz { white-space: normal; font-size: 13px; }
+.viz-ctrl { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.viz-ctrl input[type=range] { flex: 1; }
+.viz-ctrl button { background: #313244; color: #cdd6f4; border: 0; border-radius: 4px; padding: 4px 10px; cursor: pointer; }
+.viz-body { display: flex; gap: 12px; }
+#v-code { flex: 1; font-family: monospace; max-height: 160px; overflow: auto; background: #11111b; border-radius: 4px; }
+.vl { white-space: pre; padding: 0 6px; }
+.vl .ln { display: inline-block; width: 28px; color: #6c7086; }
+.vl.on { background: #45475a; color: #f9e2af; }
+#v-vars { width: 220px; max-height: 160px; overflow: auto; }
+#v-vars table { width: 100%; border-collapse: collapse; font-family: monospace; }
+#v-vars td { border-bottom: 1px solid #313244; padding: 2px 6px; }
+#v-vars tr.changed td { background: #2a3b2e; color: #a6e3a1; }
+.viz-out pre { margin: 4px 0 0; white-space: pre-wrap; }
+}
+
+@media (max-width: 768px) {
+  header { flex-wrap: wrap; gap: 6px; padding: 8px; }
+  header h1 { width: 100%; font-size: 16px; }
+  header select { flex: 1; min-width: 120px; }
+  header button { flex: 1; }
+  .progress { width: 100%; }
+  .bar { flex: 1; }
+
+  main { flex-direction: column; height: auto; }
+  #problem { width: 100%; max-height: 30vh; overflow: auto; }
+  #right { width: 100%; }
+  #editor { height: 40vh; }
+  #output { min-height: 25vh; }
+
+  .viz-body { flex-direction: column; }
+  #v-vars { width: 100%; }
 }

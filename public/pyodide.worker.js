@@ -51,10 +51,66 @@ def _judge(code, fn, tests_json):
         results.append({"args": t["args"], "expected": t["expected"], "actual": actual, "pass": ok})
     sys.stdout = old
     return json.dumps({"out": buf.getvalue(), "error": None, "results": results})
+    
+def _safe(v):
+    r = repr(v)
+    return r if len(r) <= 60 else r[:57] + "..."
+
+class _Stop(BaseException):
+    pass
+
+def _trace(code, fn, args_json):
+    steps = []
+    buf = io.StringIO()
+    old = sys.stdout
+    MAX = 300
+
+    def snap(frame):
+        d = {}
+        for k, v in frame.f_locals.items():
+            if k.startswith("__"):
+                continue
+            if callable(v) or type(v).__name__ == "module":
+                continue
+            d[k] = _safe(v)
+        return d
+
+    def tracer(frame, event, arg):
+        if frame.f_code.co_filename != "<user>":
+            return None
+        if event == "line":
+            if len(steps) >= MAX:
+                raise _Stop()
+            steps.append({
+                "line": frame.f_lineno,
+                "func": frame.f_code.co_name,
+                "vars": snap(frame),
+                "out": buf.getvalue(),
+            })
+        return tracer
+
+    err = None
+    truncated = False
+    ns = {"__name__": "__main__"}
+    sys.stdout = buf
+    sys.settrace(tracer)
+    try:
+        exec(compile(code, "<user>", "exec"), ns)
+        f = ns.get(fn)
+        if fn and callable(f):
+            f(*json.loads(args_json))
+    except _Stop:
+        truncated = True
+    except Exception:
+        err = traceback.format_exc(limit=0).strip().splitlines()[-1]
+    finally:
+        sys.settrace(None)
+        sys.stdout = old
+    return json.dumps({"steps": steps, "error": err, "truncated": truncated, "out": buf.getvalue()})
 `;
 
 onmessage = async (e) => {
-  const { type, code, fn, tests } = e.data;
+  const { type, code, fn, tests, args } = e.data;
   try {
     if (type === "init") {
       await init();
@@ -66,6 +122,8 @@ onmessage = async (e) => {
     let raw;
     if (type === "run") {
       raw = g.get("_run")(code);
+    } else if (type === "trace") {
+      raw = g.get("_trace")(code, fn || "", JSON.stringify(args || []));
     } else {
       raw = g.get("_judge")(code, fn, JSON.stringify(tests));
     }
@@ -75,6 +133,8 @@ onmessage = async (e) => {
       logs: data.out ? data.out.replace(/\n$/, "").split("\n") : [],
       error: data.error,
       results: data.results,
+      steps: data.steps,
+      truncated: data.truncated,
     });
   } catch (err) {
     postMessage({ type: "done", logs: [], error: String(err) });

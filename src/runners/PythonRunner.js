@@ -54,4 +54,9 @@ export class PythonRunner extends Runner {
     await this.init();
     return this._call({ type: "judge", code, fn: lang.fn, tests });
   }
+
+  async trace(code, fn, args) {
+    await this.init();
+    return this._call({ type: "trace", code, fn, args });
+  }
 }

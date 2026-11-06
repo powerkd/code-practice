@@ -3,6 +3,7 @@ import { getRunner, listRunners } from "../runners/index.js";
 import { createEditor } from './editor.js';
 import { translateError } from "../utils/errorTranslator.js";
 import { markSolved, isSolved, countSolved } from '../utils/progress.js';
+import { showVisualizer } from "./visualizer.js";
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 const show = (v) => JSON.stringify(v);
@@ -27,6 +28,7 @@ export function mountApp(root) {
       <select id="select-lang"></select>
       <button class="run" id="btn-run">▶ 執行</button>
       <button class="submit" id="btn-submit">✔ 提交</button>
+      <button class="reset" id="btn-viz">👁 視覺化</button>
       <button class="reset" id="btn-reset">重置</button>
       <button class="reset" id="btn-next">下一題 ➜</button>
       <div class="progress"><div class="bar"><div id="bar-fill"></div></div><span id="bar-text"></span></div>
@@ -151,6 +153,27 @@ function load() {
     }
     html = `<b class="${all ? "ok" : "bad"}">${all ? "🎉 全部通過!" : "未全部通過"} (${passed}/${r.results.length})</b>\n\n` + html;
     out.innerHTML = html;
+  };
+
+    $("btn-viz").onclick = async () => {
+    if (curLang !== "python") {
+      out.innerHTML = '<span class="dim">視覺化目前只支援 Python,請先切換語言。</span>';
+      return;
+    }
+    const p = problems[curProblem];
+    const runner = getRunner(curLang);
+    if (!runner.ready) {
+      out.innerHTML = '<span class="dim">首次載入 Python 執行環境,請稍候(約 10 秒)…</span>';
+      await runner.init();
+    }
+    out.innerHTML = '<span class="dim">記錄執行過程中…</span>';
+    const code = editor.getValue();
+    const r = await runner.trace(code, p.languages.python.fn, p.tests[0].args);
+    if (!r.steps?.length) {
+      out.innerHTML = r.error ? formatError(curLang, r.error) : '<span class="dim">沒有可顯示的執行步驟。</span>';
+      return;
+    }
+    showVisualizer(out, code, r.steps, r.truncated, r.error);
   };
 
   renderProblemList();
