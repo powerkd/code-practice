@@ -2,6 +2,7 @@ import { problems, groupByTopic, stars } from "../problems/index.js";
 import { getRunner, listRunners } from "../runners/index.js";
 import { createEditor } from './editor.js';
 import { translateError } from "../utils/errorTranslator.js";
+import { markSolved, isSolved, countSolved } from '../utils/progress.js';
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 const show = (v) => JSON.stringify(v);
@@ -9,7 +10,13 @@ const HINT = '<span class="dim">按「執行」看輸出,按「提交」檢查�
 
 function formatError(lang, message) {
     const { zh, raw } = translateError(lang, message);
-    if(!zh) return `<span class="bad>❌ ${esc(zh)}</span>\n<span class="dim>原文:${esc(raw)}</span>`;
+
+function formatError(lang, message) {
+  const { zh, raw } = translateError(lang, message);
+  if (!zh) return `<span class="bad">錯誤:${esc(raw)}</span>`;
+  return `<span class="bad">❌ ${esc(zh)}</span>\n<span class="dim">原文:${esc(raw)}</span>`;
+}
+
 }
 
 export function mountApp(root) {
@@ -22,6 +29,7 @@ export function mountApp(root) {
       <button class="submit" id="btn-submit">✔ 提交</button>
       <button class="reset" id="btn-reset">重置</button>
       <button class="reset" id="btn-next">下一題 ➜</button>
+      <div class="progress"><div class="bar"><div id="bar-fill"></div></div><span id="bar-text"></span></div>
     </header>
     <main>
       <div id="problem"></div>
@@ -44,18 +52,25 @@ export function mountApp(root) {
   });
 
   listRunners().forEach((r) => selLang.add(new Option(r.name, r.id)));
-  groupByTopic().forEach((g) => {
-    const group = document.createElement("optgroup");
-    group.label = g.name;
-    g.items.forEach((p) => {
-      group.appendChild(new Option(`${p.title}  ${stars(p.difficulty)}`, problems.indexOf(p)));
-    });
-    selProblem.appendChild(group);
-  });
 
+function renderProblemList() {
+   selProblem.innerHTML = "";
+   groupByTopic().forEach((g) => {
+     const group = document.createElement("optgroup");
+     group.label = g.name;
+     g.items.forEach((p) => {
+       const mark = isSolved(p.id, curLang) ? "✅ " : "";
+       group.appendChild(new Option(`${mark}${p.title}  ${stars(p.difficulty)}`, problems.indexOf(p)));
+     });
+     selProblem.appendChild(group);
+   });
+   selProblem.value = curProblem;
+ 
+   const done = countSolved(problems, curLang);
+   $("bar-fill").style.width = (done / problems.length) * 100 + "%";
+   $("bar-text").textContent = `${done} / ${problems.length}`;
+ }
 
-  selProblem.onchange = () => { curProblem = +selProblem.value; load(); };
-  selLang.onchange = () => { curLang = selLang.value; load(); };
 
 function load() {
   const p = problems[curProblem];
@@ -73,10 +88,23 @@ function load() {
   out.innerHTML = HINT;
 }
 
+  selLang.onchange = () => {
+    curLang = selLang.value;
+    renderProblemList();
+    load();
+  };
+
+  selProblem.onchange = () => {
+    curProblem = Number(selProblem.value);
+    load();
+  };
+
+
   $("btn-reset").onclick = () => { localStorage.removeItem(storageKey()); load(); };
   $("btn-next").onclick = () => {
   curProblem = (curProblem + 1) % problems.length;
   selProblem.value = curProblem;
+  renderProblemList();
   load();
 };
 
@@ -102,7 +130,10 @@ function load() {
     out.innerHTML = '<span class="dim">評測中…</span>';
     const p = problems[curProblem];
     const runner = getRunner(curLang);
-    if (!runner.ready) await runner.init();
+    if (!runner.ready) {
+        out.innerHTML = '<span class="dim">首次載入 ' + runner.name + '執行環境,請稍後(約 10 秒)...</span>';
+        await runner.init();
+    }
     const r = await runner.judge(editor.getValue(), p.tests, p.languages[curLang]);
     if (r.error) { out.innerHTML = formatError(curLang, r.error); return; }
     let passed = 0, html = "";
@@ -114,9 +145,14 @@ function load() {
         : `<span class="bad">✘ 測資 ${i + 1} 失敗</span>  ${esc(call)}\n    預期:${esc(show(t.expected))}\n    實際:${esc(show(t.actual))}\n`;
     });
     const all = passed === r.results.length;
+    if (all) {
+        markSolved(p.id,curLang);
+        renderProblemList();
+    }
     html = `<b class="${all ? "ok" : "bad"}">${all ? "🎉 全部通過!" : "未全部通過"} (${passed}/${r.results.length})</b>\n\n` + html;
     out.innerHTML = html;
   };
 
+  renderProblemList();
   load();
 }
