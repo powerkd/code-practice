@@ -7,10 +7,7 @@ import { showVisualizer } from "./visualizer.js";
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 const show = (v) => JSON.stringify(v);
-const HINT = '<span class="dim">按「執行」看輸出,按「提交」檢查答案。</span>';
-
-function formatError(lang, message) {
-    const { zh, raw } = translateError(lang, message);
+const HINT = '<span class="dim">👋 寫好程式後,按「▶ 執行」看輸出,或按「✔ 提交」檢查答案。</span>';
 
 function formatError(lang, message) {
   const { zh, raw } = translateError(lang, message);
@@ -18,26 +15,31 @@ function formatError(lang, message) {
   return `<span class="bad">❌ ${esc(zh)}</span>\n<span class="dim">原文:${esc(raw)}</span>`;
 }
 
-}
-
 export function mountApp(root) {
   root.innerHTML = `
     <header>
-      <h1>程式練習平台</h1>
-      <select id="select-problem"></select>
-      <select id="select-lang"></select>
-      <button class="run" id="btn-run">▶ 執行</button>
-      <button class="submit" id="btn-submit">✔ 提交</button>
-      <button class="reset" id="btn-viz">👁 視覺化</button>
-      <button class="reset" id="btn-reset">重置</button>
-      <button class="reset" id="btn-next">下一題 ➜</button>
+      <h1>🧩 程式練習平台</h1>
+      <div class="selects">
+        <select id="select-problem"></select>
+        <select id="select-lang"></select>
+      </div>
+      <div class="actions">
+        <button class="run" id="btn-run">▶ 執行</button>
+        <button class="submit" id="btn-submit">✔ 提交</button>
+        <button class="ghost" id="btn-viz">👁 視覺化</button>
+        <button class="ghost" id="btn-reset">重置</button>
+        <button class="ghost" id="btn-next">下一題 ➜</button>
+      </div>
       <div class="progress"><div class="bar"><div id="bar-fill"></div></div><span id="bar-text"></span></div>
     </header>
     <main>
       <div id="problem"></div>
       <div id="right">
         <div id="editor" spellcheck="false"></div>
-        <div id="output">${HINT}</div>
+        <div class="out-wrap">
+          <div class="out-title">輸出結果</div>
+          <div id="output">${HINT}</div>
+        </div>
       </div>
     </main>`;
 
@@ -77,7 +79,12 @@ function renderProblemList() {
 function load() {
   const p = problems[curProblem];
   const lang = p.languages[curLang];
-  $("problem").innerHTML = `<h2>${p.title}</h2><p class="dim">難度 ${stars(p.difficulty)}</p>${p.desc}`;
+  $("problem").innerHTML = `
+    <div class="p-head">
+      <h2>${p.title}</h2>
+      <span class="badge">難度 ${stars(p.difficulty)}</span>
+    </div>
+    <div class="p-body">${p.desc}</div>`;
   if (!lang) {
     editor.setValue("");
     editor.setReadOnly(true);

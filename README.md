@@ -21,7 +21,7 @@
 | 建置 | Vite |
 | 編輯器 | Monaco Editor |
 | JS 執行 | Web Worker(含逾時中斷) |
-| Python 執行 | Pyodide(WebAssembly,於 Worker 內執行) |
+| Python 執行 | Pyodide(WebAssembly,於 Worker 內執行) | 
 | 視覺化 | Python `sys.settrace` 記錄快照 |
 | 儲存 | localStorage |
 | 部署 | GitHub Pages + GitHub Actions |

@@ -1,57 +1,80 @@
 * { box-sizing: border-box; }
-body { margin: 0; font-family: "Microsoft JhengHei", system-ui, sans-serif; background: #1e1e2e; color: #cdd6f4; height: 100vh; }
-#app { height: 100vh; display: flex; flex-direction: column; }
-header { padding: 10px 16px; background: #181825; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-header h1 { font-size: 18px; margin: 0; flex: 1; }
-select, button { padding: 6px 12px; border-radius: 6px; border: none; font-size: 14px; cursor: pointer; }
-select { background: #313244; color: #cdd6f4; }
-.run { background: #89b4fa; color: #1e1e2e; }
-.submit { background: #a6e3a1; color: #1e1e2e; }
-.reset { background: #45475a; color: #cdd6f4; }
-main { flex: 1; display: flex; min-height: 0; }
-#problem { width: 38%; padding: 16px; overflow: auto; border-right: 1px solid #313244; line-height: 1.7; }
-#problem h2 { margin-top: 0; }
-#problem code, #problem pre { background: #313244; border-radius: 4px; padding: 2px 6px; }
-#problem pre { padding: 10px; }
-#right { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-#editor { flex: 1; min-height: 0;}
-#output { height: 35%; overflow: auto; background: #181825; padding: 12px; font-family: Consolas, monospace; font-size: 14px; border-top: 1px solid #313244; white-space: pre-wrap; }
-.ok { color: #a6e3a1; } .bad { color: #f38ba8; } .dim { color: #7f849c; }
-@media (max-width: 700px) {
-  main { flex-direction: column; }
-  #problem { width: 100%; height: 35%; border-right: none; border-bottom: 1px solid #313244; }
-.progress { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #a6adc8; }
-.bar { width: 120px; height: 8px; background: #313244; border-radius: 4px; overflow: hidden; }
-.bar > div { height: 100%; background: #a6e3a1; width: 0; transition: width 0.3s; }
-.viz { white-space: normal; font-size: 13px; }
-.viz-ctrl { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.viz-ctrl input[type=range] { flex: 1; }
-.viz-ctrl button { background: #313244; color: #cdd6f4; border: 0; border-radius: 4px; padding: 4px 10px; cursor: pointer; }
-.viz-body { display: flex; gap: 12px; }
-#v-code { flex: 1; font-family: monospace; max-height: 160px; overflow: auto; background: #11111b; border-radius: 4px; }
-.vl { white-space: pre; padding: 0 6px; }
-.vl .ln { display: inline-block; width: 28px; color: #6c7086; }
-.vl.on { background: #45475a; color: #f9e2af; }
-#v-vars { width: 220px; max-height: 160px; overflow: auto; }
-#v-vars table { width: 100%; border-collapse: collapse; font-family: monospace; }
-#v-vars td { border-bottom: 1px solid #313244; padding: 2px 6px; }
-#v-vars tr.changed td { background: #2a3b2e; color: #a6e3a1; }
-.viz-out pre { margin: 4px 0 0; white-space: pre-wrap; }
+:root {
+  --bg: #1e1e2e; --panel: #181825; --card: #232336; --line: #313244;
+  --text: #cdd6f4; --sub: #a6adc8; --dim: #7f849c;
+  --blue: #89b4fa; --green: #a6e3a1; --red: #f38ba8; --yellow: #f9e2af; --purple: #cba6f7;
 }
+body { margin: 0; font-family: "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 16px; height: 100vh; }
+#app { height: 100vh; display: flex; flex-direction: column; }
 
+/* ===== 標題列 ===== */
+header { padding: 10px 20px; background: var(--panel); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+header h1 { font-size: 20px; margin: 0; margin-right: auto; color: var(--purple); letter-spacing: 1px; }
+.selects, .actions { display: flex; gap: 8px; align-items: center; }
+select, button { padding: 8px 14px; border-radius: 8px; border: 1px solid transparent; font-size: 15px; font-family: inherit; cursor: pointer; transition: filter .15s, transform .05s, background .15s; }
+select { background: var(--line); color: var(--text); border-color: #45475a; }
+button:hover { filter: brightness(1.1); }
+button:active { transform: translateY(1px); }
+.run { background: var(--blue); color: #1e1e2e; font-weight: 700; }
+.submit { background: var(--green); color: #1e1e2e; font-weight: 700; }
+.ghost { background: transparent; color: var(--sub); border-color: #45475a; }
+.ghost:hover { background: var(--line); color: var(--text); filter: none; }
+.progress { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--sub); }
+.bar { width: 120px; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.bar > div { height: 100%; background: var(--green); width: 0; transition: width .3s; }
+
+/* ===== 主區域 ===== */
+main { flex: 1; display: flex; min-height: 0; }
+
+/* 題目區 */
+#problem { width: 38%; min-width: 280px; padding: 24px; overflow: auto; border-right: 1px solid var(--line); line-height: 1.8; font-size: 16px; }
+.p-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.p-head h2 { margin: 0; font-size: 24px; }
+.badge { background: #3b3a52; color: var(--yellow); padding: 3px 10px; border-radius: 999px; font-size: 13px; }
+.p-body p { margin: 0 0 14px; }
+#problem code { background: var(--line); color: var(--yellow); border-radius: 4px; padding: 2px 6px; font-family: Consolas, monospace; font-size: 14px; }
+#problem pre { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 8px; padding: 12px 14px; overflow: auto; font-family: Consolas, monospace; font-size: 14px; line-height: 1.6; }
+#problem pre code { background: none; padding: 0; color: var(--text); }
+
+/* 右側 */
+#right { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+#editor { flex: 1; min-height: 0; }
+.out-wrap { height: 38%; display: flex; flex-direction: column; background: var(--panel); border-top: 1px solid var(--line); min-height: 0; }
+.out-title { padding: 6px 16px; font-size: 13px; color: var(--sub); background: #11111b; border-bottom: 1px solid var(--line); letter-spacing: 1px; }
+#output { flex: 1; overflow: auto; padding: 14px 16px; font-family: Consolas, "Microsoft JhengHei", monospace; font-size: 15px; line-height: 1.7; white-space: pre-wrap; }
+.ok { color: var(--green); } .bad { color: var(--red); } .dim { color: var(--dim); }
+
+/* ===== 視覺化 ===== */
+.viz { white-space: normal; font-size: 14px; }
+.viz-ctrl { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.viz-ctrl input[type=range] { flex: 1; }
+.viz-ctrl button { background: var(--line); color: var(--text); border-radius: 6px; padding: 5px 12px; font-size: 14px; }
+.viz-body { display: flex; gap: 12px; }
+#v-code { flex: 1; font-family: Consolas, monospace; max-height: 180px; overflow: auto; background: #11111b; border-radius: 6px; padding: 4px 0; }
+.vl { white-space: pre; padding: 1px 8px; }
+.vl .ln { display: inline-block; width: 30px; color: #6c7086; }
+.vl.on { background: #45475a; color: var(--yellow); }
+#v-vars { width: 240px; max-height: 180px; overflow: auto; }
+#v-vars table { width: 100%; border-collapse: collapse; font-family: Consolas, monospace; margin-top: 4px; }
+#v-vars td { border-bottom: 1px solid var(--line); padding: 3px 6px; }
+#v-vars tr.changed td { background: #2a3b2e; color: var(--green); }
+.viz-out pre { margin: 4px 0 0; white-space: pre-wrap; }
+
+/* ===== 手機版 ===== */
 @media (max-width: 768px) {
-  header { flex-wrap: wrap; gap: 6px; padding: 8px; }
-  header h1 { width: 100%; font-size: 16px; }
-  header select { flex: 1; min-width: 120px; }
-  header button { flex: 1; }
+  header { gap: 8px; padding: 10px; }
+  header h1 { width: 100%; font-size: 18px; }
+  .selects, .actions { width: 100%; flex-wrap: wrap; }
+  .selects select { flex: 1; min-width: 0; }
+  .actions button { flex: 1; padding: 8px 6px; font-size: 14px; white-space: nowrap; }
   .progress { width: 100%; }
   .bar { flex: 1; }
 
-  main { flex-direction: column; height: auto; }
-  #problem { width: 100%; max-height: 30vh; overflow: auto; }
-  #right { width: 100%; }
-  #editor { height: 40vh; }
-  #output { min-height: 25vh; }
+  main { flex-direction: column; overflow: auto; }
+  #problem { width: 100%; min-width: 0; max-height: 32vh; flex: none; padding: 16px; border-right: none; border-bottom: 1px solid var(--line); }
+  #right { flex: none; width: 100%; }
+  #editor { height: 42vh; flex: none; }
+  .out-wrap { height: auto; min-height: 28vh; }
 
   .viz-body { flex-direction: column; }
   #v-vars { width: 100%; }
